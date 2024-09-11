@@ -1,0 +1,30 @@
+services:
+#  mysql_db: TODO
+#    image: 'mysql:latest'
+#    container_name: mysql_db
+#    restart: always
+#    env_file: ./.env
+#    ports:
+#      - ${MYSQL_LOCAL_PORT}:${MYSQL_DOCKER_PORT}
+#    environment:
+#      MYSQL_DATABASE: ${MYSQL_DATABASE}
+#      MYSQL_USER: ${MYSQL_USER}
+#      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+#      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+#    volumes:
+#      - mysql-data:/var/lib/mysql
+  app:
+    container_name: app
+    depends_on:
+      - mysql_db
+    build: .
+    restart: on-failure
+    env_file: ./.env
+    ports:
+      - ${SPRING_APP_LOCAL_PORT}:${SPRING_APP_DOCKER_PORT}
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_db:${MYSQL_DOCKER_PORT}/${MYSQL_DATABASE}
+      SPRING_PROFILES_ACTIVE: docker
+
+volumes:
+  mysql-data:
