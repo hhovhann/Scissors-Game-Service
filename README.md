@@ -97,10 +97,13 @@ We can also put Paper or Scissor instead Rock which will act as player1 move.
 - Run application with bach command from project root ./scripts/run.sh
 - Run the application from the IDEA itself
 
+
+## Software Design and Diagram
+- Open Api/Swagger Support - http://localhost:8080/swagger-ui/index.html
+
 ## Software Design and Diagram
 Please check the [Rss Tracker Service Design](design/scissors-game-service-draft-design-flow.drawio)
 
 # TODO
-- Add swagger support
 - Add players game results in to the Database
 - Add unit testing
