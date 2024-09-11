@@ -7,6 +7,7 @@ Then it compares both move and returns if player1 wins, loses or tie.
 
 1. Start the game and send the POST Request to the server side.
 
+a. TIE
 REQUEST
 
 ```
@@ -20,6 +21,36 @@ RESPONSE
 ```
     {
         "message": "You chose: rock, Computer chose: rock. Result: It's a tie!"
+    }
+```
+
+b. User Win
+```
+    POST http://localhost:8080/v1/api/game/start
+    {
+        "userChoice": "rock"
+    }
+```
+
+RESPONSE
+```
+    {
+        "message": "You chose: rock, Computer chose: scissors. Result: User win!"
+    }
+```
+
+c. Computer Win
+```
+    POST http://localhost:8080/v1/api/game/start
+    {
+        "userChoice": "rock"
+    }
+```
+
+RESPONSE
+```
+    {
+        "message": "You chose: rock, Computer chose: paper. Result: Computer wins!"
     }
 ```
 
