@@ -12,14 +12,6 @@ import static com.hhovhann.Scissors_Game_Service.enums.GameResult.USER_WIN;
 
 @Service
 public class GameServiceImpl implements GameService {
-    private static int BOUND = 3;
-
-    @Override
-    public String getComputerChoice() {
-        Random random = new Random();
-
-        return GameMove.values()[random.nextInt(BOUND)].getValue();
-    }
 
     @Override
     public String determineWinner(String userChoice, String computerChoice) {
