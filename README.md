@@ -6,10 +6,8 @@ Rock  Paper Scissors Game Service Spring Demo Application
 - Java 21
 - MySQL database
 - Flyway migration
-- Spring Boot 3.2.5
+- Spring Boot 3.3.3
 - Maven 3.9.5
-- Jmeter
-- The Room Java Library 2.1.0
 
 ## Software Structure
 - feature_name(feed)
