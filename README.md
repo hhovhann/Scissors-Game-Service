@@ -10,10 +10,10 @@ Then it compares both move and returns if player1 wins, loses or tie.
 REQUEST
 
 ```
-POST http://localhost:8080/v1/api/game/start
-{
-    "userChoice": "rock"
-}
+    POST http://localhost:8080/v1/api/game/start
+    {
+        "userChoice": "rock"
+    }
 ```
 
 RESPONSE
