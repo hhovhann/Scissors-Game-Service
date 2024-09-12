@@ -56,7 +56,7 @@ REQUEST
 RESPONSE
 ```
     {
-        "message": "You chose: rock, Computer chose: rock. Result: It's a tie!"
+        "message": "You chose: rock, Computer chose: rock. Result: DRAW"
     }
 ```
 
@@ -71,7 +71,7 @@ b. User Win
 RESPONSE
 ```
     {
-        "message": "You chose: rock, Computer chose: scissors. Result: User wins!"
+        "message": "You chose: rock, Computer chose: scissors. Result: WIN"
     }
 ```
 
@@ -86,7 +86,7 @@ c. Computer Win
 RESPONSE
 ```
     {
-        "message": "You chose: rock, Computer chose: paper. Result: Computer wins!"
+        "message": "You chose: rock, Computer chose: paper. Result: LOST"
     }
 ```
 
@@ -138,7 +138,16 @@ RESPONSE
 
 We can also put Paper or Scissor instead Rock which will act as player1 move.
 
-## Software Setup and Run: Docker containers
+## Software Setup and Run: Local Application
+- Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/) if you not have it installed in your machine
+- Depends on which database we are going to use, should run:
+    - local MySql       ```docker run -p 3306:3306 --name=scissors-game-service-dev-db -e MYSQL_DATABASE=scissors-game-service-dev-db -e MYSQL_ROOT_PASSWORD=root -e MYSQL_USER=api-user -e MYSQL_PASSWORD=api-password -d mysql:latest```
+    - local Redis       ```docker run -p 6379:6379 --name=scissors-game-service-dev-redis -d redis:latest```
+- Run application with bach command from project root ./scripts/run.sh
+- Run the application from the IDEA itself
+
+
+## Software Setup and Run: Docker containers: NOT FINAL SOLUTION
 - Create .env file from the root project with
   ```
     MYSQL_DATABASE=scissors-game-service-docker-db
@@ -154,18 +163,10 @@ We can also put Paper or Scissor instead Rock which will act as player1 move.
   ```
 - From root directory start containers with `docker-compose up --build`
 - To stop the containers run `docker compose down`
-
-## Software Setup and Run: Local Application
-- Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/) if you not have it installed in your machine
-- Depends on which database we are going to use, should run:
-    - local MySql       ```docker run -p 3306:3306 --name=scissors-game-service-dev-db -e MYSQL_DATABASE=scissors-game-service-dev-db -e MYSQL_ROOT_PASSWORD=root -e MYSQL_USER=api-user -e MYSQL_PASSWORD=api-password -d mysql:latest```
-    - local Redis       ```docker run -p 6379:6379 --name=scissors-game-service-dev-redis -d redis:latest```
-- Run application with bach command from project root ./scripts/run.sh
-- Run the application from the IDEA itself
-
+- 
 # Nice To Have
 - Add manual/unit/integration/performance testing
 - Add monitoring tools (Grafana, Prometheus)
-- Dockernization of containers can be modified and improved
+- Dockernization of containers can be modified and improved as it's not running successfuly
 - Rate limiting could be added to prevent the server from the high load
 - Depends on the user loads the application may need to scaled

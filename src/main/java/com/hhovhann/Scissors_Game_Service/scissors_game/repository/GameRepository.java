@@ -12,5 +12,5 @@ public interface GameRepository extends JpaRepository<Game, Long> {
 
     Optional<Game> findByIdAndStatus(Long id, String status); // New method to find active games
 
-    Integer countByResult(GameResult gameMove);
+    Integer countByResult(String move);
 }

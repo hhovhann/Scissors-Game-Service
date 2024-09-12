@@ -109,9 +109,9 @@ public class GameServiceImpl implements GameService {
         log.debug("Fetching stats from the database");
 
         return Map.of(
-                WIN, gameRepository.countByResult(WIN),
-                LOST, gameRepository.countByResult(LOST),
-                DRAW, gameRepository.countByResult(DRAW)
+                "WIN", gameRepository.countByResult("WIN"),
+                "LOST", gameRepository.countByResult("LOST"),
+                "DRAW", gameRepository.countByResult("DRAW")
         );
     }
 }
