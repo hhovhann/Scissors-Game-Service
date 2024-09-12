@@ -1,11 +1,11 @@
-package com.hhovhann.Scissors_Game_Service.enums;
+package com.hhovhann.Scissors_Game_Service.scissors_game.enums;
 
 public enum GameMove {
     ROCK("rock"),
     PAPER("paper"),
     SCISSORS("scissors");
 
-    private String value;
+    private final String value;
 
     public String getValue() {
         return this.value;
