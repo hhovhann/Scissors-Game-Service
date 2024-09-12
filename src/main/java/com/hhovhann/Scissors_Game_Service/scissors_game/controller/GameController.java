@@ -4,7 +4,6 @@ import com.hhovhann.Scissors_Game_Service.scissors_game.model.RequestModel;
 import com.hhovhann.Scissors_Game_Service.scissors_game.service.game.GameService;
 import com.hhovhann.Scissors_Game_Service.scissors_game.service.generator.GeneratorService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -80,6 +79,6 @@ public class GameController {
     public ResponseEntity<Map<Object, Object>> getStats() {
         log.info("Received request for game statistics");
 
-        return ResponseEntity.ok(gameService.getStats());
+        return ResponseEntity.ok(gameService.getStatistics());
     }
 }

@@ -90,6 +90,52 @@ RESPONSE
     }
 ```
 
+
+2. Terminate the game
+REQUEST
+```
+    PATCH http://localhost:8080/v1/api/game/terminate/1
+```
+
+RESPONSE
+```
+    Game terminated successfully.
+```
+
+RESPONSE ERROR
+```
+    Game not found or already terminated.
+```
+
+3. Reset the game
+REQUEST
+```
+    DELETE http://localhost:8080/v1/api/game/reset
+```
+
+```
+    Game reset successfully.
+```
+
+4. Get the game statistics:
+
+REQUEST 
+```
+    POST http://localhost:8080/v1/api/game/statistics
+    {
+        "userMove": "rock"
+    }
+```
+
+RESPONSE
+```
+    {
+        "User wins!": 4,
+        "Computer wins!": 3,
+        "It's a draw!": 5
+    }
+```
+
 We can also put Paper or Scissor instead Rock which will act as player1 move.
 
 ## Software Setup and Run: Docker containers
@@ -120,4 +166,6 @@ We can also put Paper or Scissor instead Rock which will act as player1 move.
 # Nice To Have
 - Add manual/unit/integration/performance testing
 - Add monitoring tools (Grafana, Prometheus)
+- Dockernization of containers can be modified and improved
+- Rate limiting could be added to prevent the server from the high load
 - Depends on the user loads the application may need to scaled

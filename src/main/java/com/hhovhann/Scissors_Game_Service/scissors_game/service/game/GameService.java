@@ -8,10 +8,10 @@ import java.util.Map;
 public interface GameService {
 
     /**
-     *
+     * Retrieves the game statistics
      * @return
      */
-    Map<Object, Object> getStats();
+    Map<Object, Object> getStatistics();
 
     /**
      *

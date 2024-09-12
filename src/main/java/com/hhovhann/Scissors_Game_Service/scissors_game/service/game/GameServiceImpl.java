@@ -4,7 +4,6 @@ import com.hhovhann.Scissors_Game_Service.scissors_game.entity.Game;
 import com.hhovhann.Scissors_Game_Service.scissors_game.enums.GameStatus;
 import com.hhovhann.Scissors_Game_Service.scissors_game.repository.GameRepository;
 import com.hhovhann.Scissors_Game_Service.scissors_game.service.cache.CacheService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +11,8 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.hhovhann.Scissors_Game_Service.scissors_game.enums.GameResult.LOST;
 import static com.hhovhann.Scissors_Game_Service.scissors_game.enums.GameResult.DRAW;
+import static com.hhovhann.Scissors_Game_Service.scissors_game.enums.GameResult.LOST;
 import static com.hhovhann.Scissors_Game_Service.scissors_game.enums.GameResult.WIN;
 
 
@@ -66,7 +65,7 @@ public class GameServiceImpl implements GameService {
     }
 
 
-    public Map<Object, Object> getStats() {
+    public Map<Object, Object> getStatistics() {
         // Try to get cachedStatistics from Redis cache first
         Map<Object, Object> cachedStatistics = cacheService.fetchStatisticsFromCache();
         if (cachedStatistics.isEmpty()) {

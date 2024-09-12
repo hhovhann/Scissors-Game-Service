@@ -7,19 +7,19 @@ public interface CacheService {
 
     /**
      * Add statistics to the cache
-     * @param stats
+     * @param stats the game statistics Map object
      */
     void addStatisticsToCache(Map<Object, Object> stats);
 
     /**
      * Increment statistics in cache
-     * @param result
+     * @param result the game data
      */
     void updateStatisticsInCache(String result);
 
     /**
      * Retrieves statistics from the cache
-     * @return
+     * @return the game statistics Map object
      */
     Map<Object, Object> fetchStatisticsFromCache();
 
