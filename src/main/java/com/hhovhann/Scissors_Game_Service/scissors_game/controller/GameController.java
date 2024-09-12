@@ -24,7 +24,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Slf4j
 @Validated
 @RestController
-@Tag(name = "Order endpoints")
+@Tag(name = "Game endpoints")
 @RequestMapping("/v1/api/game")
 public class GameController {
     public GameController(GameService gameService, GeneratorService generatorService) {
