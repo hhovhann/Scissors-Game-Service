@@ -41,6 +41,7 @@ public class GameServiceImpl implements GameService {
                 .userMove(userMove)
                 .computerMove(computerMove)
                 .result(result)
+                .status(GameStatus.ACTIVE.getValue())
                 .timestamp(LocalDateTime.now()).build();
 
         // Save game in database

@@ -3,8 +3,12 @@ package com.hhovhann.Scissors_Game_Service.scissors_game.controller;
 import com.hhovhann.Scissors_Game_Service.scissors_game.model.RequestModel;
 import com.hhovhann.Scissors_Game_Service.scissors_game.service.game.GameService;
 import com.hhovhann.Scissors_Game_Service.scissors_game.service.generator.GeneratorService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,7 +23,9 @@ import java.util.Map;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
+@Validated
 @RestController
+@Tag(name = "Order endpoints")
 @RequestMapping("/v1/api/game")
 public class GameController {
     public GameController(GameService gameService, GeneratorService generatorService) {
@@ -46,7 +52,7 @@ public class GameController {
     }
 
     @PatchMapping("/terminate/{id}")
-    public ResponseEntity<String> terminateGame(@PathVariable Long id) {
+    public ResponseEntity<String> terminateGame(@NotNull @PathVariable Long id) {
         log.info("Received request to terminate game with ID: {}", id);
 
         try {
