@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,6 +31,7 @@ public class Game {
     @Column(nullable = false)
     private String result;
     @Column(nullable = false)// WIN, LOSE, DRAW
+    @Builder.Default
     private String status = "ACTIVE";   // defaulting to ACTIVE
     @Column(nullable = false)
     private LocalDateTime timestamp;
