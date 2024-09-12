@@ -16,21 +16,33 @@ services:
       - mysql-data:/var/lib/mysql
     networks:
       - app-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      retries: 10
+      interval: 3s
+      timeout: 30s
 
   redis_cache:
     image: redis:latest
     container_name: redis
     ports:
-      - "6379:6379"
       - ${REDIS_LOCAL_PORT}:${REDIS_DOCKER_PORT}
     networks:
       - app-network
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
 
   app:
     container_name: app
     depends_on:
-      - mysql_db
-      - redis_cache
+      mysql_db:
+        condition: service_healthy
+      redis_cache:
+        condition: service_healthy
     build: .
     restart: on-failure
     env_file: ./.env
