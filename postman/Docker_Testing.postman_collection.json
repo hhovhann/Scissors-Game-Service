@@ -1,0 +1,126 @@
+{
+	"info": {
+		"_postman_id": "e927cca5-2342-473f-87d5-77b1714d7fa4",
+		"name": "Game: Rock, Paper, Scissors",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "170067"
+	},
+	"item": [
+		{
+			"name": "Start the game",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userMove\": \"rock\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/api/game/start",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"api",
+						"game",
+						"start"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Terminate the game",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userMove\": \"rock\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8888/v1/api/game/terminate/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"v1",
+						"api",
+						"game",
+						"terminate",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset the game",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userMove\": \"rock\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/api/game/reset",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"api",
+						"game",
+						"reset"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Game Statistics",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/api/game/statistics",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"api",
+						"game",
+						"statistics"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

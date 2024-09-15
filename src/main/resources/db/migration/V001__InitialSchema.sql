@@ -1,10 +1,9 @@
-CREATE TABLE IF NOT EXISTS game
+CREATE TABLE IF NOT EXISTS GAME
 (
-    ID            bigint       not null auto_increment,
-    TIMESTAMP     datetime(6)  not null,
-    COMPUTER_MOVE varchar(255) not null,
-    RESULT        varchar(255) not null,
-    STATUS        varchar(255) not null,
-    USER_MOVE     varchar(255) not null,
-    primary key (ID)
+    ID            BIGSERIAL    PRIMARY KEY,
+    TIMESTAMP     TIMESTAMP(6) NOT NULL,
+    COMPUTER_MOVE VARCHAR(255) NOT NULL,
+    RESULT        VARCHAR(255) NOT NULL,
+    STATUS        VARCHAR(255) NOT NULL,
+    USER_MOVE     VARCHAR(255) NOT NULL
 );

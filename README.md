@@ -141,32 +141,33 @@ We can also put Paper or Scissor instead Rock which will act as player1 move.
 ## Software Setup and Run: Local Application
 - Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/) if you not have it installed in your machine
 - Depends on which database we are going to use, should run:
-    - local MySql       ```docker run -p 3306:3306 --name=scissors-game-service-dev-db -e MYSQL_DATABASE=scissors-game-service-dev-db -e MYSQL_ROOT_PASSWORD=root -e MYSQL_USER=api-user -e MYSQL_PASSWORD=api-password -d mysql:latest```
+    - local PostgreSQL  ```docker run --name scissors-game-service-dev-db -e POSTGRES_USER=api-username -e POSTGRES_PASSWORD=api-password -e POSTGRES_DB=scissors-game-service-dev-db -p 5432:5432 -d postgres```
     - local Redis       ```docker run -p 6379:6379 --name=scissors-game-service-dev-redis -d redis:latest```
 - Run application with bach command from project root ./scripts/run.sh
 - Run the application from the IDEA itself
 
 
-## Software Setup and Run: Docker containers: NOT FINAL SOLUTION
+## Software Setup and Run: Docker containers:
 - Create .env file from the root project with
   ```
-    MYSQL_DATABASE=scissors-game-service-docker-db
-    MYSQL_USER=api-user
-    MYSQL_PASSWORD=api-password
-    MYSQL_ROOT_PASSWORD=api-password
-    MYSQL_LOCAL_PORT=13306
-    MYSQL_DOCKER_PORT=3306
-    REDIS_LOCAL_PORT=16379
+    POSTGRES_DATABASE=scissors-game-service-docker-db
+    POSTGRES_USER=api-username
+    POSTGRES_PASSWORD=api-password
+    POSTGRES_LOCAL_PORT=5432
+    POSTGRES_DOCKER_PORT=5432
+    REDIS_LOCAL_PORT=6379
     REDIS_DOCKER_PORT=6379
+    REDIS_DOCKER_HOST=redis_cache
     SPRING_APP_LOCAL_PORT=8888
     SPRING_APP_DOCKER_PORT=8080
+    SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_db:5432/scissors-game-service-docker-db
   ```
 - From root directory start containers with `docker-compose up --build`
 - To stop the containers run `docker compose down`
 - 
 # Nice To Have
-- Add manual/unit/integration/performance testing
+- Add unit/integration/performance testing
 - Add monitoring tools (Grafana, Prometheus)
-- Dockernization of containers can be modified and improved as it's not running successfuly
 - Rate limiting could be added to prevent the server from the high load
-- Depends on the user loads the application may need to scaled
+- For high user loads add horizontal scaling
+- The application security: authentication and authorisation
