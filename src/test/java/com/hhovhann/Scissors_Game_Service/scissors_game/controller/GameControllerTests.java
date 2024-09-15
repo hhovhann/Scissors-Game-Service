@@ -6,14 +6,12 @@ import com.hhovhann.Scissors_Game_Service.scissors_game.service.game.GameService
 import com.hhovhann.Scissors_Game_Service.scissors_game.service.generator.GeneratorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Collections;
 import java.util.Map;
 
 import static org.mockito.Mockito.doNothing;
@@ -41,9 +39,6 @@ class GameControllerTests {
 
     @MockBean
     private GeneratorService generatorService;
-
-    @InjectMocks
-    private GameController gameController;
 
     @BeforeEach
     void setUp() {
@@ -116,13 +111,16 @@ class GameControllerTests {
     @Test
     void testGetStatistics() throws Exception {
         // Given
-        Map<Object, Object> statistics = Collections.singletonMap("totalGames", 10);
+        Map<Object, Object> statistics = Map.of("WIN", 10, "LOST", 5, "DRAW", 1);
 
         when(gameService.getStatistics()).thenReturn(statistics);
 
         // When & Then
         mockMvc.perform(get("/v1/api/game/statistics"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.totalGames").value(10));
+                .andExpect(jsonPath("$.WIN").value(10))
+                .andExpect(jsonPath("$.LOST").value(5))
+                .andExpect(jsonPath("$.DRAW").value(1))
+        ;
     }
 }
