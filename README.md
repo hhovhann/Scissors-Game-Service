@@ -1,4 +1,4 @@
-# Scissors-Game-Service
+# scissors-game-service
 Rock  Paper Scissors Game Service Spring Demo Application
 
 ## Software Environment

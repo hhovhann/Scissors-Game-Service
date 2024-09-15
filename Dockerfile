@@ -7,7 +7,7 @@ FROM openjdk:21-slim-bullseye
 WORKDIR /usr/src/app
 
 RUN mkdir -p /usr/src/app/.m2 && mkdir /usr/src/app/.m2/repository
-COPY --from=build /usr/src/app/target/Scissors-Game-Service-1.0.0-SNAPSHOT.jar .
+COPY --from=build /usr/src/app/target/scissors-game-service-1.0.0-SNAPSHOT.jar .
 
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","Scissors-Game-Service-1.0.0-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","scissors-game-service-1.0.0-SNAPSHOT.jar"]
