@@ -142,7 +142,7 @@ We can also put Paper or Scissor instead Rock which will act as player1 move.
 ## Software Setup and Run: Local Application
 - Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/) if you not have it installed in your machine
 - Depends on which database we are going to use, should run:
-    - local PostgreSQL  ```docker run --name scissors-game-service-dev-db -e POSTGRES_USER=api-username -e POSTGRES_PASSWORD=api-password -e POSTGRES_DB=scissors-game-service-dev-db -p 5432:5432 -d postgres```
+    - local PostgreSQL  ```docker run --name scissors-game-service-dev-db -e POSTGRES_USER=api-username -e POSTGRES_PASSWORD=api-password -e POSTGRES_DB=scissors-game-service-dev-db -p 5432:5432 -d postgres:latest```
     - local Redis       ```docker run -p 6379:6379 --name=scissors-game-service-dev-redis -d redis:latest```
 - Run application with bach command from project root ./scripts/run.sh
 - Run the application from the IDEA itself

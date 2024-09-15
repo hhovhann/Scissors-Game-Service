@@ -2,6 +2,7 @@ package com.hhovhann.Scissors_Game_Service.scissors_game.service.game;
 
 import com.hhovhann.Scissors_Game_Service.scissors_game.entity.Game;
 import com.hhovhann.Scissors_Game_Service.scissors_game.enums.GameStatus;
+import com.hhovhann.Scissors_Game_Service.scissors_game.exception.GameNotFoundException;
 import com.hhovhann.Scissors_Game_Service.scissors_game.repository.GameRepository;
 import com.hhovhann.Scissors_Game_Service.scissors_game.service.cache.CacheService;
 import org.junit.jupiter.api.BeforeEach;
@@ -119,7 +120,7 @@ class GameServiceTest {
         when(gameRepository.findByIdAndStatus(gameId, "ACTIVE")).thenReturn(Optional.empty());
 
         // When & Then
-        Exception exception = assertThrows(IllegalStateException.class, () -> gameService.terminateGame(gameId));
+        Exception exception = assertThrows(GameNotFoundException.class, () -> gameService.terminateGame(gameId));
         assertEquals("Game not found or already terminated.", exception.getMessage());
     }
 
