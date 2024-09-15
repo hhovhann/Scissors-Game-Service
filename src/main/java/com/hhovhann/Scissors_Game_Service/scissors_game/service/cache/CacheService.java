@@ -3,7 +3,7 @@ package com.hhovhann.Scissors_Game_Service.scissors_game.service.cache;
 import java.util.Map;
 
 public interface CacheService {
-    String STATISTIC_KEY = "game_statistics";
+    String STATISTIC_KEY = "GAME_STATISTICS";
 
     /**
      * Add statistics to the cache

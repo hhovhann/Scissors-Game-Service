@@ -1,4 +1,4 @@
-package com.hhovhann.Scissors_Game_Service.scissors_game.service.game;
+package com.hhovhann.Scissors_Game_Service.scissors_game.service;
 
 import com.hhovhann.Scissors_Game_Service.scissors_game.entity.Game;
 import com.hhovhann.Scissors_Game_Service.scissors_game.enums.GameStatus;

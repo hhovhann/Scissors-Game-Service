@@ -166,8 +166,8 @@ We can also put Paper or Scissor instead Rock which will act as player1 move.
 - To stop the containers run `docker compose down`
 - 
 # Nice To Have
-- Add unit/integration/performance testing
 - Add monitoring tools (Grafana, Prometheus)
+- Add  integration(need to add testcontainers), performance(Jmetter) testing
 - Rate limiting could be added to prevent the server from the high load
 - For high user loads add horizontal scaling
 - The application security: authentication and authorisation

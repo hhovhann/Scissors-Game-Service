@@ -1,7 +1,7 @@
 package com.hhovhann.Scissors_Game_Service.scissors_game.controller;
 
 import com.hhovhann.Scissors_Game_Service.scissors_game.model.RequestModel;
-import com.hhovhann.Scissors_Game_Service.scissors_game.service.game.GameService;
+import com.hhovhann.Scissors_Game_Service.scissors_game.service.GameService;
 import com.hhovhann.Scissors_Game_Service.scissors_game.service.generator.GeneratorService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;

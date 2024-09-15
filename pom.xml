@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.hhovhann</groupId>
-    <artifactId>Scissors-Game-Service</artifactId>
+    <artifactId>scissors-game-service</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>Scissors-Game-Service</name>
     <description>Demo project for Spring Boot</description>

@@ -2,22 +2,22 @@ package com.hhovhann.Scissors_Game_Service.scissors_game.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hhovhann.Scissors_Game_Service.scissors_game.model.RequestModel;
-import com.hhovhann.Scissors_Game_Service.scissors_game.service.game.GameService;
+import com.hhovhann.Scissors_Game_Service.scissors_game.service.GameService;
+import com.hhovhann.Scissors_Game_Service.scissors_game.service.generator.GeneratorService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -27,71 +27,102 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Disabled
 @WebMvcTest(GameController.class)
 class GameControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
 
-    @Mock
+    @Autowired
+    private ObjectMapper objectMapper;  // Jackson ObjectMapper for converting objects to JSON
+
+    @MockBean
     private GameService gameService;
+
+    @MockBean
+    private GeneratorService generatorService;
 
     @InjectMocks
     private GameController gameController;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(gameController).build();
+        // No need for explicit setup when using @WebMvcTest and @MockBean,
+        // services will be injected automatically.
     }
 
     @Test
     void testMakeMove() throws Exception {
+        // Given
         String userMove = "rock";
         String computerMove = "scissors";
-        String result = "WIN";
+        String result = "You win!";
+
+        // Creating RequestModel object
         RequestModel requestModel = new RequestModel(userMove);
 
+        // Mocking service method calls
+        when(generatorService.generateGameMoveRandomValue()).thenReturn(computerMove);
         when(gameService.makeMove(userMove, computerMove)).thenReturn(result);
 
+        // Serialize the request model to JSON
+        String requestBody = objectMapper.writeValueAsString(requestModel);
+
+        // When & Then
         mockMvc.perform(post("/v1/api/game/start")
-                        .content(objectMapper.writeValueAsString(requestModel))
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))  // Pass serialized JSON
                 .andExpect(status().isOk())
-                .andExpect(content().string("Result: " + result));
+                .andExpect(content().string("You chose: rock, Computer chose: scissors. Result: You win!"));
     }
 
     @Test
-    void testGetStats() throws Exception {
-        Map<Object, Object> stats = new HashMap<>();
-        stats.put("WIN", 10);
-        stats.put("LOSE", 5);
-        stats.put("DRAW", 2);
+    void testTerminateGame() throws Exception {
+        // Given
+        Long gameId = 1L;
 
-        when(gameService.getStatistics()).thenReturn(stats);
+        doNothing().when(gameService).terminateGame(gameId);
 
-        mockMvc.perform(get("/v1/api/game/stats"))
+        // When & Then
+        mockMvc.perform(patch("/v1/api/game/terminate/{id}", gameId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.WIN").value(10))
-                .andExpect(jsonPath("$.LOSE").value(5))
-                .andExpect(jsonPath("$.DRAW").value(2));
+                .andExpect(content().string("Game terminated successfully."));
+    }
+
+    @Test
+    void testTerminateGame_NotFound() throws Exception {
+        // Given
+        Long gameId = 1L;
+
+        doThrow(new IllegalStateException("Game not found")).when(gameService).terminateGame(gameId);
+
+        // When & Then
+        mockMvc.perform(patch("/v1/api/game/terminate/{id}", gameId))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Game not found"));
     }
 
     @Test
     void testResetGame() throws Exception {
+        // Given
+        doNothing().when(gameService).resetGame();
+
+        // When & Then
         mockMvc.perform(delete("/v1/api/game/reset"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Game reset successfully."));
     }
 
     @Test
-    void testTerminateGame() throws Exception {
-        long gameId = 1L;
-        mockMvc.perform(patch("/v1/api/game/terminate/{id}", gameId))
+    void testGetStatistics() throws Exception {
+        // Given
+        Map<Object, Object> statistics = Collections.singletonMap("totalGames", 10);
+
+        when(gameService.getStatistics()).thenReturn(statistics);
+
+        // When & Then
+        mockMvc.perform(get("/v1/api/game/statistics"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Game terminated successfully."));
+                .andExpect(jsonPath("$.totalGames").value(10));
     }
 }
