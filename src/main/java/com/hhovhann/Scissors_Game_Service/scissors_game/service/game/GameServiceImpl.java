@@ -1,7 +1,8 @@
-package com.hhovhann.Scissors_Game_Service.scissors_game.service;
+package com.hhovhann.Scissors_Game_Service.scissors_game.service.game;
 
 import com.hhovhann.Scissors_Game_Service.scissors_game.entity.Game;
 import com.hhovhann.Scissors_Game_Service.scissors_game.enums.GameStatus;
+import com.hhovhann.Scissors_Game_Service.scissors_game.exception.GameNotFoundException;
 import com.hhovhann.Scissors_Game_Service.scissors_game.repository.GameRepository;
 import com.hhovhann.Scissors_Game_Service.scissors_game.service.cache.CacheService;
 import lombok.extern.slf4j.Slf4j;
@@ -97,7 +98,7 @@ public class GameServiceImpl implements GameService {
             log.info("Game with ID: {} terminated successfully.", gameId);
         } else {
             log.warn("Attempted to terminate a non-existent or already terminated game with ID: {}", gameId);
-            throw new IllegalStateException("Game not found or already terminated.");
+            throw new GameNotFoundException("Game not found or already terminated.");
         }
     }
 

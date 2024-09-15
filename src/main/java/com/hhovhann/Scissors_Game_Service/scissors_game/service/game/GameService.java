@@ -1,4 +1,4 @@
-package com.hhovhann.Scissors_Game_Service.scissors_game.service;
+package com.hhovhann.Scissors_Game_Service.scissors_game.service.game;
 
 
 import com.hhovhann.Scissors_Game_Service.scissors_game.enums.GameMove;

@@ -2,7 +2,7 @@ package com.hhovhann.Scissors_Game_Service.scissors_game.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hhovhann.Scissors_Game_Service.scissors_game.model.RequestModel;
-import com.hhovhann.Scissors_Game_Service.scissors_game.service.GameService;
+import com.hhovhann.Scissors_Game_Service.scissors_game.service.game.GameService;
 import com.hhovhann.Scissors_Game_Service.scissors_game.service.generator.GeneratorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

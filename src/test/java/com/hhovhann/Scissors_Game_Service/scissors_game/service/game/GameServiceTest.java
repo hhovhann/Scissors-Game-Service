@@ -4,7 +4,6 @@ import com.hhovhann.Scissors_Game_Service.scissors_game.entity.Game;
 import com.hhovhann.Scissors_Game_Service.scissors_game.enums.GameStatus;
 import com.hhovhann.Scissors_Game_Service.scissors_game.repository.GameRepository;
 import com.hhovhann.Scissors_Game_Service.scissors_game.service.cache.CacheService;
-import com.hhovhann.Scissors_Game_Service.scissors_game.service.GameServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

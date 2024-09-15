@@ -15,6 +15,7 @@ Rock  Paper Scissors Game Service Spring Demo Application
     - controller
     - entity
     - enums
+    - exception
     - model
     - repository
     - service
