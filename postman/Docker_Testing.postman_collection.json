@@ -84,7 +84,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoaG92aGFubiIsImlhdCI6MTcyNjYwNjkwOCwiZXhwIjoxNzI2NjQyOTA4fQ.8zDW8zFXah2o9mwRiMlDABb9ROtIVJU7jtcd5tP71HE",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoaG92aGFubiIsImlhdCI6MTcyNjYxMDAzMSwiZXhwIjoxNzI2NjQ2MDMxfQ.NSJs6p3Hljfr9G5YuLXesUwS767mgYwMaHSckEa6pwA",
                   "type": "string"
                 }
               ]
@@ -93,7 +93,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"userMove\": \"rock\",\n    \"userId\": \"bfc3206f-4551-41e8-85eb-bb75d52aeb7f\"\n}",
+              "raw": "{\n    \"userMove\": \"rock\",\n    \"userId\": \"b889d601-0fb4-48c8-b807-38e314e69714\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -125,7 +125,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoaG92aGFubiIsImlhdCI6MTcyNjYwNjkwOCwiZXhwIjoxNzI2NjQyOTA4fQ.8zDW8zFXah2o9mwRiMlDABb9ROtIVJU7jtcd5tP71HE",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoaG92aGFubiIsImlhdCI6MTcyNjYxMDAzMSwiZXhwIjoxNzI2NjQ2MDMxfQ.NSJs6p3Hljfr9G5YuLXesUwS767mgYwMaHSckEa6pwA",
                   "type": "string"
                 }
               ]
@@ -142,7 +142,7 @@
               }
             },
             "url": {
-              "raw": "http://localhost:8888/v1/api/game/terminate/1",
+              "raw": "http://localhost:8888/v1/api/game/terminate/10",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -153,7 +153,7 @@
                 "api",
                 "game",
                 "terminate",
-                "1"
+                "10"
               ]
             }
           },
@@ -167,24 +167,15 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoaG92aGFubiIsImlhdCI6MTcyNjYwNjkwOCwiZXhwIjoxNzI2NjQyOTA4fQ.8zDW8zFXah2o9mwRiMlDABb9ROtIVJU7jtcd5tP71HE",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoaG92aGFubiIsImlhdCI6MTcyNjYxMDAzMSwiZXhwIjoxNzI2NjQ2MDMxfQ.NSJs6p3Hljfr9G5YuLXesUwS767mgYwMaHSckEa6pwA",
                   "type": "string"
                 }
               ]
             },
-            "method": "DELETE",
+            "method": "POST",
             "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"userMove\": \"rock\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
             "url": {
-              "raw": "http://localhost:8888/v1/api/game/reset/bfc3206f-4551-41e8-85eb-bb75d52aeb7f",
+              "raw": "http://localhost:8888/v1/api/game/reset/b889d601-0fb4-48c8-b807-38e314e69714",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -195,7 +186,7 @@
                 "api",
                 "game",
                 "reset",
-                "bfc3206f-4551-41e8-85eb-bb75d52aeb7f"
+                "b889d601-0fb4-48c8-b807-38e314e69714"
               ]
             }
           },
@@ -209,7 +200,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoaG92aGFubiIsImlhdCI6MTacyNjYwMDI4NCwiZXhwIjoxNzI2NjM2Mjg0fQ.cMUIXWo6gtDSms30LWosl8xNSN1sGNXmCSxDWskiYwQ",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoaG92aGFubiIsImlhdCI6MTcyNjYxMDAzMSwiZXhwIjoxNzI2NjQ2MDMxfQ.NSJs6p3Hljfr9G5YuLXesUwS767mgYwMaHSckEa6pwA",
                   "type": "string"
                 }
               ]
@@ -217,7 +208,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:8888/v1/api/game/statistics",
+              "raw": "http://localhost:8888/v1/api/game/statistics/b889d601-0fb4-48c8-b807-38e314e69714",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -227,7 +218,8 @@
                 "v1",
                 "api",
                 "game",
-                "statistics"
+                "statistics",
+                "b889d601-0fb4-48c8-b807-38e314e69714"
               ]
             }
           },
