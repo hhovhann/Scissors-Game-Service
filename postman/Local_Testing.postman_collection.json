@@ -1,126 +1,239 @@
 {
-	"info": {
-		"_postman_id": "e927cca5-2342-473f-87d5-77b1714d7fa4",
-		"name": "Game: Rock, Paper, Scissors",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "170067"
-	},
-	"item": [
-		{
-			"name": "Start the game",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"userMove\": \"rock\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/v1/api/game/start",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"v1",
-						"api",
-						"game",
-						"start"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Terminate the game",
-			"request": {
-				"method": "PATCH",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"userMove\": \"rock\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/v1/api/game/terminate/1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"v1",
-						"api",
-						"game",
-						"terminate",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Reset the game",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"userMove\": \"rock\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/v1/api/game/reset",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"v1",
-						"api",
-						"game",
-						"reset"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Game Statistics",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/v1/api/game/statistics",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"v1",
-						"api",
-						"game",
-						"statistics"
-					]
-				}
-			},
-			"response": []
-		}
-	]
+  "info": {
+    "_postman_id": "e927cca5-2342-473f-87d5-77b1714d7fa4",
+    "name": "Game: Rock, Paper, Scissors",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "170067"
+  },
+  "item": [
+    {
+      "name": "user",
+      "item": [
+        {
+          "name": "Register New User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"hhovhann\",\n    \"pasword\": \"hhovhann123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/v1/api/user/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "v1",
+                "api",
+                "user",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Authenticate User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"hhovhann\",\n    \"password\": \"hhovhann123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/v1/api/user/authenticate",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "v1",
+                "api",
+                "user",
+                "authenticate"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "game",
+      "item": [
+        {
+          "name": "Start the game",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoaG92aGFubiIsImlhdCI6MTcyNjYwNjkwOCwiZXhwIjoxNzI2NjQyOTA4fQ.8zDW8zFXah2o9mwRiMlDABb9ROtIVJU7jtcd5tP71HE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"userMove\": \"rock\",\n    \"userId\": \"bfc3206f-4551-41e8-85eb-bb75d52aeb7f\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/v1/api/game/start",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "v1",
+                "api",
+                "game",
+                "start"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Terminate the game",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoaG92aGFubiIsImlhdCI6MTcyNjYwNjkwOCwiZXhwIjoxNzI2NjQyOTA4fQ.8zDW8zFXah2o9mwRiMlDABb9ROtIVJU7jtcd5tP71HE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"userMove\": \"rock\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/v1/api/game/terminate/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "v1",
+                "api",
+                "game",
+                "terminate",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset the game",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoaG92aGFubiIsImlhdCI6MTcyNjYwNjkwOCwiZXhwIjoxNzI2NjQyOTA4fQ.8zDW8zFXah2o9mwRiMlDABb9ROtIVJU7jtcd5tP71HE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"userMove\": \"rock\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/v1/api/game/reset/bfc3206f-4551-41e8-85eb-bb75d52aeb7f",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "v1",
+                "api",
+                "game",
+                "reset",
+                "bfc3206f-4551-41e8-85eb-bb75d52aeb7f"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Game Statistics",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJoaG92aGFubiIsImlhdCI6MTacyNjYwMDI4NCwiZXhwIjoxNzI2NjM2Mjg0fQ.cMUIXWo6gtDSms30LWosl8xNSN1sGNXmCSxDWskiYwQ",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/v1/api/game/statistics",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "v1",
+                "api",
+                "game",
+                "statistics"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
 }

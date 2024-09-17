@@ -2,6 +2,5 @@ package com.hhovhann.Scissors_Game_Service.scissors_game.model;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record RequestModel(@NotBlank(message = "Data cannot be blank") String userMove) {
-
+public record UserRequest (@NotBlank String username, @NotBlank String password, @NotBlank String email) {
 }

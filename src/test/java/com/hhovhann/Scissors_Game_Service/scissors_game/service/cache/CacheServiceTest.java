@@ -1,6 +1,5 @@
 package com.hhovhann.Scissors_Game_Service.scissors_game.service.cache;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -9,17 +8,15 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import static com.hhovhann.Scissors_Game_Service.scissors_game.service.cache.CacheService.STATISTIC_KEY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.*;
 
-class CacheServiceTest {
-
-    private static final String STATISTIC_KEY = "GAME_STATISTICS";
+class CacheServiceImplTest {
 
     @Mock
     private RedisTemplate<String, Object> redisTemplate;
@@ -37,52 +34,86 @@ class CacheServiceTest {
     }
 
     @Test
-    void testAddStatisticsToCache() {
+    void addStatisticsToCache_shouldAddStatsToCache() {
         // Given
-        Map<Object, Object> stats = Map.of("WIN", 10, "LOST", 5, "DRAW", 3);
+        String userId = "user1";
+        Map<Object, Object> stats = new HashMap<>();
+        stats.put("key1", "value1");
+        stats.put("key2", "value2");
 
         // When
-        cacheService.addStatisticsToCache(stats);
+        cacheService.addStatisticsToCache(userId, stats);
 
         // Then
-        verify(hashOperations, times(1)).putAll(STATISTIC_KEY, stats);
-        verifyNoMoreInteractions(hashOperations);
+        verify(hashOperations).putAll(STATISTIC_KEY + ":" + userId, stats);
     }
 
     @Test
-    void testUpdateStatisticsInCache() {
+    void addStatisticsToCache_shouldNotAddEmptyStats() {
         // Given
-        String result = "WIN";
+        String userId = "user1";
+        Map<Object, Object> stats = new HashMap<>(); // empty stats
 
         // When
-        cacheService.updateStatisticsInCache(result);
+        cacheService.addStatisticsToCache(userId, stats);
 
         // Then
-        verify(hashOperations, times(1)).increment(STATISTIC_KEY, result, 1);
+        verify(hashOperations, never()).putAll(anyString(), anyMap());
     }
 
     @Test
-    void testFetchStatisticsFromCache() {
+    void updateStatisticsInCache_shouldIncrementValue() {
         // Given
-        Map<Object, Object> cachedStats = Map.of("WIN", 10, "LOST", 5, "DRAW", 3);
-        when(hashOperations.entries(STATISTIC_KEY)).thenReturn(cachedStats);
+        String userId = "user1";
+        String result = "resultKey";
 
         // When
-        Map<Object, Object> actualStats = cacheService.fetchStatisticsFromCache();
+        cacheService.updateStatisticsInCache(userId, result);
 
         // Then
-        assertEquals(cachedStats, actualStats);
-        verify(hashOperations, times(1)).entries(STATISTIC_KEY);
+        verify(hashOperations).increment(STATISTIC_KEY + ":" + userId, result, 1);
     }
 
     @Test
-    void testResetStatisticsFromCache() {
+    void fetchStatisticsFromCache_shouldReturnStats() {
+        // Given
+        String userId = "user1";
+        Map<Object, Object> stats = new HashMap<>();
+        stats.put("key1", "value1");
+
+        when(hashOperations.entries(STATISTIC_KEY + ":" + userId)).thenReturn(stats);
+
         // When
-        cacheService.resetStatisticsFromCache();
+        Map<Object, Object> result = cacheService.fetchStatisticsFromCache(userId);
 
         // Then
-        verify(redisTemplate, times(1)).delete(STATISTIC_KEY);
+        verify(hashOperations).entries(STATISTIC_KEY + ":" + userId);
+        assertEquals(stats, result);
     }
 
+    @Test
+    void fetchStatisticsFromCache_shouldReturnNullIfEmpty() {
+        // Given
+        String userId = "user1";
+        when(hashOperations.entries(STATISTIC_KEY + ":" + userId)).thenReturn(new HashMap<>());
+
+        // When
+        Map<Object, Object> result = cacheService.fetchStatisticsFromCache(userId);
+
+        // Then
+        verify(hashOperations).entries(STATISTIC_KEY + ":" + userId);
+        assertNull(result);
+    }
+
+    @Test
+    void resetStatisticsFromCache_shouldDeleteStats() {
+        // Given
+        String userId = "user1";
+
+        // When
+        cacheService.resetStatisticsFromCache(userId);
+
+        // Then
+        verify(hashOperations).delete(STATISTIC_KEY + ":" + userId);
+    }
 }
-

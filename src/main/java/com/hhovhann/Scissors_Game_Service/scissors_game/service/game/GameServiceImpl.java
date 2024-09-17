@@ -3,8 +3,10 @@ package com.hhovhann.Scissors_Game_Service.scissors_game.service.game;
 import com.hhovhann.Scissors_Game_Service.scissors_game.entity.Game;
 import com.hhovhann.Scissors_Game_Service.scissors_game.enums.GameStatus;
 import com.hhovhann.Scissors_Game_Service.scissors_game.exception.GameNotFoundException;
+import com.hhovhann.Scissors_Game_Service.scissors_game.model.GameResponse;
 import com.hhovhann.Scissors_Game_Service.scissors_game.repository.GameRepository;
 import com.hhovhann.Scissors_Game_Service.scissors_game.service.cache.CacheService;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +31,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public String makeMove(String userMove, String computerMove) {
+    public GameResponse makeMove(String userId, String userMove, String computerMove) {
         log.debug("User move received: {}, Computer move recived: {}", userMove, computerMove);
 
         String result = determineWinner(userMove, computerMove);
@@ -39,6 +41,7 @@ public class GameServiceImpl implements GameService {
 
         Game gameToBeStored = Game.builder()
                 .userMove(userMove)
+                .userId(userId)
                 .computerMove(computerMove)
                 .result(result)
                 .status(GameStatus.ACTIVE.getValue())
@@ -48,9 +51,9 @@ public class GameServiceImpl implements GameService {
         gameRepository.save(gameToBeStored);
 
         // Update statistics in cache
-        cacheService.updateStatisticsInCache(result);
+        cacheService.updateStatisticsInCache(userId, result);
 
-        return result;
+        return new GameResponse(gameToBeStored.getId(), "You chose: " + userMove + ", Computer chose: " + computerMove + ". Result: " + result);
     }
 
     @Override
@@ -65,25 +68,35 @@ public class GameServiceImpl implements GameService {
         }
     }
 
-
-    public Map<Object, Object> getStatistics() {
+    @Override
+    public Map<Object, Object> getStatistics(String userId) {
         // Try to get cachedStatistics from Redis cache first
-        Map<Object, Object> cachedStatistics = cacheService.fetchStatisticsFromCache();
-        if (cachedStatistics.isEmpty()) {
-            log.info("Cache miss. Fetching stats from the database.");
-            cachedStatistics = fetchStatisticsFromDatabase();
-            cacheService.addStatisticsToCache(cachedStatistics);
+        Map<Object, Object> cachedStatistics = cacheService.fetchStatisticsFromCache(userId);
+        if (cachedStatistics == null || cachedStatistics.isEmpty()) {
+            log.info("Cache miss for user_id: {}. Fetching stats from the database.", userId);
+            cachedStatistics = fetchStatisticsFromDatabase(userId);
+            if (cachedStatistics != null && !cachedStatistics.isEmpty()) {
+                cacheService.addStatisticsToCache(userId, cachedStatistics);
+            } else {
+                log.warn("Failed to fetch statistics from the database for user_id: {}.", userId);
+            }
+        } else {
+            log.info("Cache hit for user_id: {}. Returning stats from cache.", userId);
         }
         return cachedStatistics;
     }
 
+
     @Override
-    public void resetGame() {
+    @Transactional
+    public void resetGame(String userId) {
         log.info("Resetting game: clearing database records and Redis cache");
 
-        gameRepository.deleteAll();
+        // Clear game data from the database
+        gameRepository.deleteAllByUserId(userId);
 
-        cacheService.resetStatisticsFromCache();
+        // Reset statistics in Redis cache
+        cacheService.resetStatisticsFromCache(userId);
     }
 
     @Override
@@ -106,13 +119,13 @@ public class GameServiceImpl implements GameService {
      * Retrieves statistics from the database
      * @return the map of statistics results
      */
-    private Map<Object, Object> fetchStatisticsFromDatabase() {
+    private Map<Object, Object> fetchStatisticsFromDatabase(String userId) {
         log.debug("Fetching stats from the database");
 
         return Map.of(
-                "WIN", gameRepository.countByResult("WIN"),
-                "LOST", gameRepository.countByResult("LOST"),
-                "DRAW", gameRepository.countByResult("DRAW")
+                "WIN", gameRepository.countByResultAndUserId("WIN", userId),
+                "LOST", gameRepository.countByResultAndUserId("LOST", userId),
+                "DRAW", gameRepository.countByResultAndUserId("DRAW", userId)
         );
     }
 }

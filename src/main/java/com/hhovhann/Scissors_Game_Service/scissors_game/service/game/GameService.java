@@ -2,6 +2,7 @@ package com.hhovhann.Scissors_Game_Service.scissors_game.service.game;
 
 
 import com.hhovhann.Scissors_Game_Service.scissors_game.enums.GameMove;
+import com.hhovhann.Scissors_Game_Service.scissors_game.model.GameResponse;
 
 import java.util.Map;
 
@@ -11,19 +12,19 @@ public interface GameService {
      * Retrieves the game statistics
      * @return
      */
-    Map<Object, Object> getStatistics();
+    Map<Object, Object> getStatistics(String userId);
 
     /**
      *
      * @param userMove
      * @return
      */
-    String makeMove(String userMove, String computerMove);
+    GameResponse makeMove(String userId, String userMove, String computerMove);
 
     /**
      *
      */
-    void resetGame();
+    void resetGame(String userId);
 
     /**
      * Terminate the game session
@@ -51,4 +52,5 @@ public interface GameService {
                 || (userMove.equals(GameMove.SCISSORS.getValue()) && computerMove.equals(GameMove.PAPER.getValue()))
                 || (userMove.equals(GameMove.PAPER.getValue()) && computerMove.equals(GameMove.ROCK.getValue()));
     }
+
 }

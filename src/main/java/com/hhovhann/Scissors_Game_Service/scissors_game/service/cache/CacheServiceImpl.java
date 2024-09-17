@@ -14,30 +14,40 @@ public class CacheServiceImpl implements CacheService {
     private final RedisTemplate<String, Object> redisTemplate;
 
     @Override
-    public void addStatisticsToCache(Map<Object, Object> stats) {
-        log.debug("Add stats in Redis cache for result: {}", stats);
+    public void addStatisticsToCache(String userId, Map<Object, Object> stats) {
+        if (stats == null || stats.isEmpty()) {
+            log.warn("Attempted to add empty stats to cache for user_id: {}.", userId);
+            return;
+        }
 
-        redisTemplate.opsForHash().putAll(STATISTIC_KEY, stats);
+        log.debug("Adding stats to Redis cache for user_id: {}: {}", userId, stats);
+        redisTemplate.opsForHash().putAll(STATISTIC_KEY + ":" + userId, stats);
+    }
+
+
+    @Override
+    public void updateStatisticsInCache(String userId, String result) {
+        log.debug("Updating stats in Redis cache for user_id: {} with result: {}", userId, result);
+        String cacheKey = STATISTIC_KEY + ":" + userId;
+
+        // Use Redis operations to update counts
+        redisTemplate.opsForHash().increment(cacheKey, result, 1);
+    }
+
+
+    @Override
+    public Map<Object, Object> fetchStatisticsFromCache(String userId) {
+        log.debug("Fetching stats from Redis cache for user_id: {}", userId);
+        Map<Object, Object> cachedStats = redisTemplate.opsForHash().entries(STATISTIC_KEY + ":" + userId);
+        if (cachedStats.isEmpty()) {
+            return null; // or Collections.emptyMap();
+        }
+        return cachedStats;
     }
 
     @Override
-    public void updateStatisticsInCache(String result) {
-        log.debug("Updating stats in Redis cache for result: {}", result);
-
-        redisTemplate.opsForHash().increment(STATISTIC_KEY, result, 1);
-    }
-
-    @Override
-    public Map<Object, Object> fetchStatisticsFromCache() {
-        log.debug("Fetching stats from Redis cache");
-
-        return redisTemplate.opsForHash().entries(STATISTIC_KEY);
-    }
-
-    @Override
-    public void resetStatisticsFromCache() {
-        log.debug("Clear the game statistics from Redis cache");
-
-        redisTemplate.delete(STATISTIC_KEY);
+    public void resetStatisticsFromCache(String userId) {
+        log.debug("Resetting stats in Redis cache for user_id: {}", userId);
+        redisTemplate.opsForHash().delete(STATISTIC_KEY + ":" + userId);
     }
 }
