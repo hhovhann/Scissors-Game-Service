@@ -1,4 +1,4 @@
-package com.hhovhann.Scissors_Game_Service.scissors_game.configuration.security;
+package com.hhovhann.Scissors_Game_Service.scissors_game.configuration;
 
 import com.hhovhann.Scissors_Game_Service.scissors_game.filter.JwtRequestFilter;
 import org.springframework.context.annotation.Bean;
@@ -9,11 +9,12 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
 @EnableMethodSecurity
@@ -33,7 +34,7 @@ public class SecurityConfiguration {
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        .sessionCreationPolicy(STATELESS)
                 );
 
         // Add JWT filter before the security filter

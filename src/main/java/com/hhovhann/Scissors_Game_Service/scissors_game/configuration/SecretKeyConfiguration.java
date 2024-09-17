@@ -9,6 +9,7 @@ public class SecretKeyConfiguration {
 
     @Value("${app.token.secret.key}")
     private String secretKey;
+
     @Value("${app.token.secret.key.expiration.time}")
     private Long secretKeyExpirationTime;
 

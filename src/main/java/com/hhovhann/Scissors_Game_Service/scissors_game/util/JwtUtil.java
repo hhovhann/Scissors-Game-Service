@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+@Slf4j
 @Component
 public class JwtUtil {
 
@@ -25,18 +27,22 @@ public class JwtUtil {
         // Generate a secure key from the base64-encoded secret key
         // Decode the base64-encoded secret key
         this.signingKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secretKeyConfiguration.getSecretKey()));
+        log.debug("JWT signing key initialized.");
     }
 
     public String extractUsername(String token) {
+        log.debug("Extracting username from token.");
         return extractClaim(token, Claims::getSubject);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        log.debug("Extracting claims from token.");
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
     public Claims extractAllClaims(String token) {
+        log.debug("Extracting all claims from token.");
         return Jwts.parser()
                 .setSigningKey(signingKey)
                 .build()
@@ -45,11 +51,13 @@ public class JwtUtil {
     }
 
     public String generateToken(String username) {
+        log.debug("Generating token for username: {}", username);
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, username);
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
+        log.debug("Creating token with subject: {}", subject);
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
@@ -60,15 +68,20 @@ public class JwtUtil {
     }
 
     public boolean validateToken(String token, String username) {
+        log.debug("Validating token for username: {}", username);
         final String extractedUsername = extractUsername(token);
-        return (extractedUsername.equals(username) && !isTokenExpired(token));
+        boolean isValid = (extractedUsername.equals(username) && !isTokenExpired(token));
+        log.debug("Token validation result: {}", isValid);
+        return isValid;
     }
 
     private boolean isTokenExpired(String token) {
+        log.debug("Checking if token is expired.");
         return extractExpiration(token).before(new Date());
     }
 
     private Date extractExpiration(String token) {
+        log.debug("Extracting expiration date from token.");
         return extractClaim(token, Claims::getExpiration);
     }
 }
