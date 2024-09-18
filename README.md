@@ -106,6 +106,7 @@ We can also put Paper or Scissor instead Rock which will act as player1 move.
 - Run application with bach command from project root ./scripts/run.sh
 - Run the application from the IDEA itself
 
+NOTE: For controller successful testing the PostgreSQL and Redis containers should be running
 
 ## Software Setup and Run: Docker containers:
 - Create .env file from the root project with

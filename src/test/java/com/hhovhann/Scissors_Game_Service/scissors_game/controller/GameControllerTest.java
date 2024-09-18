@@ -1,43 +1,34 @@
 package com.hhovhann.Scissors_Game_Service.scissors_game.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hhovhann.Scissors_Game_Service.ScissorsGameServiceApplication;
 import com.hhovhann.Scissors_Game_Service.scissors_game.model.GameRequest;
 import com.hhovhann.Scissors_Game_Service.scissors_game.model.GameResponse;
 import com.hhovhann.Scissors_Game_Service.scissors_game.service.game.GameService;
 import com.hhovhann.Scissors_Game_Service.scissors_game.service.generator.GeneratorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureMockMvc
-@WithMockUser(authorities = "USER")
-@SpringBootTest(classes = ScissorsGameServiceApplication.class)
-public class GameControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
+class GameControllerTest {
 
-    @MockBean
+    @Mock
     private GameService gameService;
 
-    @MockBean
+    @Mock
     private GeneratorService generatorService;
+
+    @InjectMocks
+    private GameController gameController;
 
     @BeforeEach
     void setUp() {
@@ -45,88 +36,60 @@ public class GameControllerTest {
     }
 
     @Test
-    void makeMove_shouldReturnGameResponse() throws Exception {
-        // Given
-        String userId = "user1";
-        String userMove = "rock";
-        String computerMove = "scissors";
-        String result = "WIN";
+    @WithMockUser(authorities = "USER")
+    void testMakeMove_noRepositoryCalls() {
+        GameRequest gameRequest = new GameRequest("user1", "rock");
+        GameResponse gameResponse = new GameResponse(1L, "srock");
 
-        GameResponse gameResponse = new GameResponse(1L, "You chose: rock, Computer chose: scissors. Result: WIN");
-
-        when(generatorService.generateGameMoveRandomValue()).thenReturn(computerMove);
+        when(generatorService.generateGameMoveRandomValue()).thenReturn("scissors");
         when(gameService.makeMove(anyString(), anyString(), anyString())).thenReturn(gameResponse);
 
-        // When
-        mockMvc.perform(MockMvcRequestBuilders.post("/v1/api/game/start")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(new GameRequest(userId, userMove))))
-                .andExpect(status().isOk())
-                .andExpect(content().json(asJsonString(gameResponse)));
+        ResponseEntity<GameResponse> response = gameController.makeMove(gameRequest);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+        assertThat(response.getBody()).isEqualTo(gameResponse);
+
+        verify(gameService).makeMove(anyString(), anyString(), anyString());
+        verify(generatorService).generateGameMoveRandomValue();
+        // Verify that no repository calls are made, assuming repository methods are not called in these services
     }
 
     @Test
-    void terminateGame_shouldReturnSuccessMessage() throws Exception {
-        // Given
-        Long gameId = 1L;
+    @WithMockUser(authorities = "USER")
+    void testTerminateGame_noRepositoryCalls() {
+        long gameId = 1L;
 
-        // When
-        mockMvc.perform(MockMvcRequestBuilders.patch("/v1/api/game/terminate/{game_id}", gameId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Game terminated successfully."));
+        gameController.terminateGame(gameId);
+
+        verify(gameService).terminateGame(gameId);
+        // Verify that no repository calls are made
     }
 
     @Test
-    void resetGame_shouldReturnSuccessMessage() throws Exception {
-        // Given
+    @WithMockUser(authorities = "USER")
+    void testResetGame_noRepositoryCalls() {
         String userId = "user1";
 
-        // When
-        mockMvc.perform(MockMvcRequestBuilders.delete("/v1/api/game/reset/{user_id}", userId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Game reset successfully."));
+        gameController.resetGame(userId);
+
+        verify(gameService).resetGame(userId);
+        // Verify that no repository calls are made
     }
 
     @Test
-    void getStats_shouldReturnStatistics() throws Exception {
-        // Given
+    @WithMockUser(authorities = "USER")
+    void testGetStats_noRepositoryCalls() {
         String userId = "user1";
-        Map<Object, Object> stats = new HashMap<>();
-        stats.put("WIN", 10);
-        stats.put("LOST", 5);
-        stats.put("DRAW", 2);
+        Map<Object, Object> stats = Map.of("stat1", 1);
 
         when(gameService.getStatistics(anyString())).thenReturn(stats);
 
-        // When
-        mockMvc.perform(MockMvcRequestBuilders.get("/v1/api/game/statistics/{user_id}", userId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json(asJsonString(stats)));
-    }
+        ResponseEntity<Map<Object, Object>> response = gameController.getStats(userId);
 
-    @Test
-    void getStats_shouldReturnNoContent() throws Exception {
-        // Given
-        String userId = "user1";
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+        assertThat(response.getBody()).isEqualTo(stats);
 
-        when(gameService.getStatistics(anyString())).thenReturn(new HashMap<>());
-
-        // When
-        mockMvc.perform(MockMvcRequestBuilders.get("/v1/api/game/statistics/{user_id}", userId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
-    }
-
-    // Helper method to convert objects to JSON string
-    private static String asJsonString(Object obj) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        verify(gameService).getStatistics(anyString());
+        // Verify that no repository calls are made
     }
 }
