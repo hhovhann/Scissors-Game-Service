@@ -48,6 +48,7 @@ public class CacheServiceImpl implements CacheService {
     @Override
     public void resetStatisticsFromCache(String userId) {
         log.debug("Resetting stats in Redis cache for user_id: {}", userId);
-        redisTemplate.opsForHash().delete(STATISTIC_KEY + ":" + userId, "someField");
+        redisTemplate.delete(STATISTIC_KEY + ":" + userId);
+
     }
 }

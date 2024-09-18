@@ -121,13 +121,15 @@ We can also put Paper or Scissor instead Rock which will act as player1 move.
     SPRING_APP_LOCAL_PORT=8888
     SPRING_APP_DOCKER_PORT=8080
     SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_db:5432/scissors-game-service-docker-db
+    GRAFANA_LOCAL_PORT=3000
+    GRAFANA_DOCKER_PORT=3000
+    PROMETHEUS_LOCAL_PORT=9090
+    PROMETHEUS_DOCKER_PORT=9090
   ```
 - From root directory start containers with `docker-compose up --build`
 - To stop the containers run `docker compose down`
 - 
 # Nice To Have
-- Add monitoring tools (Grafana, Prometheus)
 - Add  integration (need to add testcontainers), performance(Jmetter) testing
 - Rate limiting could be added to prevent the server from the high load
 - For high user loads add horizontal scaling
-- The application security: authentication and authorisation
