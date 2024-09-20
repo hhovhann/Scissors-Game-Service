@@ -14,15 +14,19 @@ import java.util.Map;
 import static com.hhovhann.Scissors_Game_Service.scissors_game.service.cache.CacheService.STATISTIC_KEY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-class CacheServiceImplTest {
+class CacheServiceTest {
 
     @Mock
     private RedisTemplate<String, Object> redisTemplate;
 
     @Mock
     private HashOperations<String, Object, Object> hashOperations;
+
     @InjectMocks
     private CacheServiceImpl cacheService;
 

@@ -1,11 +1,13 @@
 package com.hhovhann.Scissors_Game_Service.scissors_game.service.game;
 
 import com.hhovhann.Scissors_Game_Service.scissors_game.entity.Game;
+import com.hhovhann.Scissors_Game_Service.scissors_game.entity.User;
 import com.hhovhann.Scissors_Game_Service.scissors_game.enums.GameStatus;
 import com.hhovhann.Scissors_Game_Service.scissors_game.exception.GameNotFoundException;
 import com.hhovhann.Scissors_Game_Service.scissors_game.model.GameResponse;
 import com.hhovhann.Scissors_Game_Service.scissors_game.repository.GameRepository;
 import com.hhovhann.Scissors_Game_Service.scissors_game.service.cache.CacheService;
+import com.hhovhann.Scissors_Game_Service.scissors_game.service.user.UserDetailsService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,10 +26,12 @@ import static com.hhovhann.Scissors_Game_Service.scissors_game.enums.GameResult.
 public class GameServiceImpl implements GameService {
     private final CacheService cacheService;
     private final GameRepository gameRepository;
+    private final UserDetailsService userDetailsService;
 
-    public GameServiceImpl(CacheService cacheService, GameRepository gameRepository) {
+    public GameServiceImpl(CacheService cacheService, GameRepository gameRepository, UserDetailsService userDetailsService) {
         this.cacheService = cacheService;
         this.gameRepository = gameRepository;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -38,10 +42,12 @@ public class GameServiceImpl implements GameService {
 
         log.info("User move: {}, Computer move: {}, Result: {}", userMove, computerMove, result);
 
+        // Fetch the User entity based on userId
+        User user = userDetailsService.findById(userId);
 
         Game gameToBeStored = Game.builder()
                 .userMove(userMove)
-                .userId(userId)
+                .user(user)
                 .computerMove(computerMove)
                 .result(result)
                 .status(GameStatus.ACTIVE.getValue())
@@ -70,8 +76,10 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Map<Object, Object> getStatistics(String userId) {
+        // Fetch the User entity based on userId
+        User user = userDetailsService.findById(userId);
         // Try to get cachedStatistics from Redis cache first
-        Map<Object, Object> cachedStatistics = cacheService.fetchStatisticsFromCache(userId);
+        Map<Object, Object> cachedStatistics = cacheService.fetchStatisticsFromCache(user.getUserId());
         if (cachedStatistics == null || cachedStatistics.isEmpty()) {
             log.info("Cache miss for user_id: {}. Fetching stats from the database.", userId);
             cachedStatistics = fetchStatisticsFromDatabase(userId);
@@ -92,8 +100,11 @@ public class GameServiceImpl implements GameService {
     public void resetGame(String userId) {
         log.info("Resetting game: clearing database records and Redis cache");
 
+        // Fetch the User entity based on userId
+        User user = userDetailsService.findById(userId);
+
         // Clear game data from the database
-        gameRepository.deleteAllByUserId(userId);
+        gameRepository.deleteAllByUserId(user.getUserId());
 
         // Reset statistics in Redis cache
         cacheService.resetStatisticsFromCache(userId);
@@ -123,9 +134,9 @@ public class GameServiceImpl implements GameService {
         log.debug("Fetching stats from the database");
 
         return Map.of(
-                "WIN", gameRepository.countByResultAndUserId("WIN", userId),
-                "LOST", gameRepository.countByResultAndUserId("LOST", userId),
-                "DRAW", gameRepository.countByResultAndUserId("DRAW", userId)
+                "WIN", gameRepository.countByResultAndUserUserId("WIN", userId),
+                "LOST", gameRepository.countByResultAndUserUserId("LOST", userId),
+                "DRAW", gameRepository.countByResultAndUserUserId("DRAW", userId)
         );
     }
 }

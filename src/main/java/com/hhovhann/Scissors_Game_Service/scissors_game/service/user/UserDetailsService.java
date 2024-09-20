@@ -2,6 +2,7 @@ package com.hhovhann.Scissors_Game_Service.scissors_game.service.user;
 
 import com.hhovhann.Scissors_Game_Service.scissors_game.entity.User;
 import com.hhovhann.Scissors_Game_Service.scissors_game.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -46,5 +47,10 @@ public class UserDetailsService implements org.springframework.security.core.use
         User savedUser = userRepository.save(newUser);
         log.info("Successfully registered new user: {}", username);
         return savedUser;
+    }
+
+    public User findById(String userId) {
+        return userRepository.findByUserId(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with id %s isn't not found".formatted(userId)));
     }
 }

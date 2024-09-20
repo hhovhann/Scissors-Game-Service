@@ -2,8 +2,7 @@ package com.hhovhann.Scissors_Game_Service.scissors_game.enums;
 
 public enum GameStatus {
     ACTIVE("ACTIVE"),
-    TERMINATED("TERMINATED"),
-    IN_PROGRESS("IN_PROGRESS");
+    TERMINATED("TERMINATED");
 
     private final String value;
 

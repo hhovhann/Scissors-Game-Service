@@ -2,6 +2,7 @@ package com.hhovhann.Scissors_Game_Service.scissors_game.service.user;
 
 import com.hhovhann.Scissors_Game_Service.scissors_game.entity.User;
 import com.hhovhann.Scissors_Game_Service.scissors_game.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,9 +14,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 class UserDetailsServiceTest {
 
@@ -99,5 +103,32 @@ class UserDetailsServiceTest {
 
         // When & Then
         assertThrows(IllegalStateException.class, () -> userDetailsService.registerNewUser(username, password, email));
+    }
+
+    @Test
+    void findById_UserExists_ReturnsUser() {
+        // Given
+        String userId = "user123";
+        User user = new User("username", "password", "email@example.com");
+        when(userRepository.findByUserId(userId)).thenReturn(Optional.of(user));
+
+        // When
+        User foundUser = userDetailsService.findById(userId);
+
+        // Then
+        assertNotNull(foundUser);
+        assertEquals("username", foundUser.getUsername());
+        assertEquals("email@example.com", foundUser.getEmail());
+    }
+
+    @Test
+    void findById_UserDoesNotExist_ThrowsEntityNotFoundException() {
+        // Given
+        String userId = "user123";
+        when(userRepository.findByUserId(userId)).thenReturn(Optional.empty());
+
+        // When & Then
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> userDetailsService.findById(userId));
+        assertEquals("User with id user123 isn't not found", exception.getMessage());
     }
 }

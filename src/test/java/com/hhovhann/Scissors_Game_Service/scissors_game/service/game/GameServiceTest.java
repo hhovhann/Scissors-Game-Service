@@ -1,11 +1,14 @@
 package com.hhovhann.Scissors_Game_Service.scissors_game.service.game;
 
 import com.hhovhann.Scissors_Game_Service.scissors_game.entity.Game;
+import com.hhovhann.Scissors_Game_Service.scissors_game.entity.User;
+import com.hhovhann.Scissors_Game_Service.scissors_game.enums.GameResult;
 import com.hhovhann.Scissors_Game_Service.scissors_game.enums.GameStatus;
 import com.hhovhann.Scissors_Game_Service.scissors_game.exception.GameNotFoundException;
 import com.hhovhann.Scissors_Game_Service.scissors_game.model.GameResponse;
 import com.hhovhann.Scissors_Game_Service.scissors_game.repository.GameRepository;
 import com.hhovhann.Scissors_Game_Service.scissors_game.service.cache.CacheService;
+import com.hhovhann.Scissors_Game_Service.scissors_game.service.user.UserDetailsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,10 +26,13 @@ import static com.hhovhann.Scissors_Game_Service.scissors_game.enums.GameResult.
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class GameServiceImplTest {
+class GameServiceTest {
 
     @Mock
     private CacheService cacheService;
+
+    @Mock
+    private UserDetailsService userDetailsService;
 
     @Mock
     private GameRepository gameRepository;
@@ -38,6 +44,7 @@ class GameServiceImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
+
     @Test
     void makeMove_shouldUpdateCacheStatistics() {
         // Given
@@ -46,10 +53,12 @@ class GameServiceImplTest {
         String computerMove = "scissors";
         String result = "WIN"; // The result returned from determineWinner
 
-        String expectedResponse =  "You chose: " + userMove + ", Computer chose: " + computerMove + ". Result: " + result;
+        String expectedResponse = "You chose: " + userMove + ", Computer chose: " + computerMove + ". Result: " + result;
 
         // Stubbing
         when(gameRepository.save(any(Game.class))).thenReturn(new Game());
+        when(userDetailsService.findById(userId)).thenReturn(new User());
+
         doNothing().when(cacheService).updateStatisticsInCache(userId, result); // Use doNothing() for void methods
 
 
@@ -61,19 +70,22 @@ class GameServiceImplTest {
         assertEquals(expectedResponse, response.result());
     }
 
-
-
     @Test
     void makeMove_shouldSaveGameAndUpdateCache() {
         // Given
         String userId = "user1";
         String userMove = "rock";
         String computerMove = "scissors";
-        String result = WIN.getValue();
+        String result = GameResult.WIN.getValue();  // Assuming WIN is an enum value.
 
+        // Create a mock User entity
+        User user = new User();
+        user.setUserId(userId); // Set the userId
+
+        // Build the Game entity
         Game game = Game.builder()
+                .user(user) // Set the User reference
                 .userMove(userMove)
-                .userId(userId)
                 .computerMove(computerMove)
                 .result(result)
                 .status(GameStatus.ACTIVE.getValue())
@@ -81,8 +93,8 @@ class GameServiceImplTest {
                 .build();
 
         when(gameRepository.save(any(Game.class))).thenReturn(game);
+        when(userDetailsService.findById(userId)).thenReturn(user);
         doNothing().when(cacheService).updateStatisticsInCache(userId, result); // Use doNothing() for void methods
-
 
         // When
         GameResponse response = gameService.makeMove(userId, userMove, computerMove);
@@ -142,12 +154,17 @@ class GameServiceImplTest {
         cachedStats.put("LOST", 2L);
         cachedStats.put("DRAW", 3L);
 
+        User user = new User();
+        user.setUserId(userId);
+
+        when(userDetailsService.findById(userId)).thenReturn(user);
         when(cacheService.fetchStatisticsFromCache(userId)).thenReturn(cachedStats);
 
         // When
         Map<Object, Object> stats = gameService.getStatistics(userId);
 
         // Then
+        verify(userDetailsService).findById(userId);
         verify(cacheService).fetchStatisticsFromCache(userId);
         assertEquals(cachedStats, stats);
     }
@@ -161,21 +178,25 @@ class GameServiceImplTest {
         dbStats.put("LOST", 2L);
         dbStats.put("DRAW", 3L);
 
-        when(cacheService.fetchStatisticsFromCache(userId)).thenReturn(null);
-        when(gameRepository.countByResultAndUserId("WIN", userId)).thenReturn(5L);
-        when(gameRepository.countByResultAndUserId("LOST", userId)).thenReturn(2L);
-        when(gameRepository.countByResultAndUserId("DRAW", userId)).thenReturn(3L);
-        doNothing().when(cacheService).addStatisticsToCache(userId, dbStats); // Use doNothing() for void methods
+        User user = new User();
+        user.setUserId(userId);
 
+        when(userDetailsService.findById(userId)).thenReturn(user);
+        when(cacheService.fetchStatisticsFromCache(userId)).thenReturn(null); // Cache miss
+        when(gameRepository.countByResultAndUserUserId("WIN", userId)).thenReturn(5L);
+        when(gameRepository.countByResultAndUserUserId("LOST", userId)).thenReturn(2L);
+        when(gameRepository.countByResultAndUserUserId("DRAW", userId)).thenReturn(3L);
+        doNothing().when(cacheService).addStatisticsToCache(userId, dbStats); // Cache update
 
         // When
         Map<Object, Object> stats = gameService.getStatistics(userId);
 
         // Then
+        verify(userDetailsService).findById(userId);
         verify(cacheService).fetchStatisticsFromCache(userId);
-        verify(gameRepository).countByResultAndUserId("WIN", userId);
-        verify(gameRepository).countByResultAndUserId("LOST", userId);
-        verify(gameRepository).countByResultAndUserId("DRAW", userId);
+        verify(gameRepository).countByResultAndUserUserId("WIN", userId);
+        verify(gameRepository).countByResultAndUserUserId("LOST", userId);
+        verify(gameRepository).countByResultAndUserUserId("DRAW", userId);
         verify(cacheService).addStatisticsToCache(userId, dbStats);
         assertEquals(dbStats, stats);
     }
@@ -184,13 +205,18 @@ class GameServiceImplTest {
     void resetGame_shouldClearDatabaseRecordsAndCache() {
         // Given
         String userId = "user1";
+        User user = new User();
+        user.setUserId(userId); // Set the userId
+
+        when(userDetailsService.findById(userId)).thenReturn(user);
 
         // When
         gameService.resetGame(userId);
 
         // Then
-        verify(gameRepository).deleteAllByUserId(userId);
-        verify(cacheService).resetStatisticsFromCache(userId);
+        verify(userDetailsService).findById(userId); // Ensure the user is fetched first
+        verify(gameRepository).deleteAllByUserId(userId); // Ensure database records are cleared
+        verify(cacheService).resetStatisticsFromCache(userId); // Ensure cache is cleared
     }
 
     @Test
